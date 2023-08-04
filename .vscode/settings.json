@@ -1,0 +1,10 @@
+{
+    "java.project.sourcePaths": [
+        "myLib",
+        "Deques and Randomized Queues"
+    ],
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "myLib\\algs4.jar"
+    ]
+}
