@@ -1,6 +1,5 @@
 // rand queue implementation using resising arrays
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
@@ -66,7 +65,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
-        StdRandom.shuffle(arr);
+        StdRandom.shuffle(arr, 0, N);
         return new RandomizedArrayIterator();
     }
 
@@ -87,10 +86,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         RandomizedQueue<String> rq = new RandomizedQueue<>();
         rq.enqueue("orange");
         rq.enqueue("banana");
-        rq.enqueue("kiwi");
         rq.enqueue("apple");
+        rq.enqueue("grapes");
         
+        //System.out.println(rq.sample() + " chosen randomly");
+        System.out.println(rq.dequeue() + " removed");
+        System.out.println(rq.dequeue() + " removed");
+
         
+
+        
+
 
         for (String s : rq) {
             System.out.print(s + " ");
