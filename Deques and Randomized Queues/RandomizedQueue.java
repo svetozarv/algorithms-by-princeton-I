@@ -34,8 +34,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item[] copy = (Item[]) new Object[capacity];
         for (int i = 0; i < N; i++) {
             copy[i] = arr[i];
-        arr = copy;
         }
+        arr = copy;
     }
 
     // remove and return a random item
@@ -83,6 +83,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
-        // to be done
+
+        RandomizedQueue<String> rq = new RandomizedQueue<>();
+        rq.enqueue("orange");
+        rq.enqueue("banana");
+        rq.enqueue("kiwi");
+        rq.enqueue("apple");
+        
+        
+
+        for (String s : rq) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
     }
 }
