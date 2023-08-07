@@ -7,6 +7,7 @@ public class PercolationStats {
     private int trials;
     private List<Double> thresholds;
 
+    // perform independent trials on an n-by-n grid
     public PercolationStats(int size, int trials) {
         if (size <= 0 || trials <= 0) {
             throw new IllegalArgumentException();
@@ -36,6 +37,7 @@ public class PercolationStats {
         }
     }
 
+    // sample mean of percolation threshold
     public double mean() {
         double thresholds_sum = 0;
         for (double threshold : this.thresholds) {
@@ -44,6 +46,7 @@ public class PercolationStats {
         return thresholds_sum / this.trials;
     }
 
+    // sample standard deviation of percolation threshold
     public double stddev() {
         double mean = this.mean();
         double numerator = 0;
@@ -53,11 +56,18 @@ public class PercolationStats {
         return Math.sqrt(numerator / (this.trials - 1));
     }
 
+    // low endpoint of 95% confidence interval
     public double confidenceLo() {
         return this.mean() - (1.96 * this.stddev() / Math.sqrt(this.trials));
     }
 
+    // high endpoint of 95% confidence interval
     public double confidenceHi() {
         return this.mean() + (1.96 * this.stddev() / Math.sqrt(this.trials));
+    }
+
+    // test client
+    public static void main(String[] args) {
+
     }
 }

@@ -6,13 +6,14 @@ import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 
-class Percolation {
-    int size;
+public class Percolation {
+    private int size;
     private int num_of_open_sites;
     private int[][] grid;
     private WeightedQuickUnionUF uf;
     double threshold;
 
+    // creates n-by-n grid, with all sites initially blocked
     public Percolation(int size) {
         if (size <= 0) {
             throw new IllegalArgumentException();
@@ -21,13 +22,14 @@ class Percolation {
         this.num_of_open_sites = 0;
         this.grid = new int[size][size];
 
+        // fill the grid with zeros
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 grid[i][j] = 0;
             }
         }
 
-        this.uf = new WeightedQuickUnionUF(size * size + 2);
+        this.uf = new WeightedQuickUnionUF(size*size + 2);
         for (int i = 0; i < this.size; i++) {
             this.uf.union(i, );
         }
@@ -36,7 +38,7 @@ class Percolation {
         }
     }
 
-    public void visualise() {
+    private void visualise() {
         System.out.println();
         for (int[] row : grid) {
             for (int i : row) {
@@ -47,7 +49,7 @@ class Percolation {
         System.out.println();
     }
 
-    public int convertIndexes(int row, int col) {
+    private int convertIndexes(int row, int col) {
         return size * row + col;
     }
 
@@ -55,6 +57,7 @@ class Percolation {
         return uf.find(p) == uf.find(q);
     }
 
+    // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
         if (row < 0 || col < 0 || row >= size || col >= size) {
             throw new IllegalArgumentException();
@@ -91,6 +94,7 @@ class Percolation {
         }
     }
 
+    // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
         if (row < 0 || col < 0 || row >= size || col >= size) {
             throw new IllegalArgumentException();
@@ -98,6 +102,7 @@ class Percolation {
         return grid[row][col] == 1;
     }
 
+    // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         if (row < 0 || col < 0 || row > size || col > size) {
             throw new IllegalArgumentException();
@@ -109,10 +114,12 @@ class Percolation {
         return false;
     }
 
+    // returns the number of open sites
     public int numberOfOpenSites() {
         return num_of_open_sites;
     }
 
+    // does the system percolate?
     public boolean percolates() {
         if (isFull(size, 0)) {
             threshold = num_of_open_sites / Math.pow(size, 2);
