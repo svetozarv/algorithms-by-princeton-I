@@ -93,10 +93,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         System.out.println(rq.dequeue() + " removed");
         System.out.println(rq.dequeue() + " removed");
 
-        
-
-        
-
 
         for (String s : rq) {
             System.out.print(s + " ");

@@ -1,7 +1,8 @@
 {
     "java.project.sourcePaths": [
         "myLib",
-        "Deques and Randomized Queues"
+        "Deques and Randomized Queues",
+        "Percolation"
     ],
     "java.project.referencedLibraries": [
         "lib/**/*.jar",

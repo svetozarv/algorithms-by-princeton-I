@@ -1,8 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 
@@ -31,10 +28,10 @@ public class Percolation {
 
         this.uf = new WeightedQuickUnionUF(size*size + 2);
         for (int i = 0; i < this.size; i++) {
-            this.uf.union(i, );
+            this.uf.union(i, this.size*this.size);
         }
         for (int i = this.size * this.size - this.size; i < this.size * this.size; i++) {
-            this.uf.union(i,);
+            this.uf.union(i, this.size*this.size + 1);
         }
     }
 
@@ -122,7 +119,7 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         if (isFull(size, 0)) {
-            threshold = num_of_open_sites / Math.pow(size, 2);
+            threshold = num_of_open_sites / size*size;
             return true;
         }
         return false;

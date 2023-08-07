@@ -18,7 +18,7 @@ public class PercolationStats {
         for (int i = 0; i < trials; i++) {
             Percolation perc = new Percolation(size);
             List<Integer> random_coordinates = new ArrayList<>();
-            for (int k = 0; k < perc.size * perc.size; k++) {
+            for (int k = 0; k < size*size; k++) {
                 random_coordinates.add(k);
             }
             Random rand = new Random();
@@ -30,7 +30,7 @@ public class PercolationStats {
             }
             int index = 0;
             while (!perc.percolates()) {
-                perc.open(random_coordinates.get(index) / perc.size, random_coordinates.get(index) % perc.size);
+                perc.open(random_coordinates.get(index) / size, random_coordinates.get(index) % size);
                 index++;
             }
             this.thresholds.add(perc.threshold);
