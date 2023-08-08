@@ -32,12 +32,6 @@ public class Percolation {
         }
 
         this.uf = new WeightedQuickUnionUF(size*size + 2);
-        for (int i = 0; i < size; i++) {
-            this.uf.union(i, size*size);
-        }
-        for (int i = size*size - size; i < size*size; i++) {
-            this.uf.union(i, size*size + 1);
-        }
     }
 
     private void visualise() {
@@ -71,6 +65,13 @@ public class Percolation {
 
         int i = convertIndexes(row, col);
         
+        if (row == 0) {
+            uf.union(i, size*size);
+        }
+        if (row == size - 1) {
+            uf.union(i, size*size + 1);
+        }
+
         // Check on the left
         if (col != 0 && grid[row][col - 1]) {
             int j = convertIndexes(row, col - 1);
