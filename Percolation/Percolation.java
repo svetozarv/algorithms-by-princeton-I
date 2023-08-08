@@ -2,6 +2,7 @@
 1. edited the code based on checkstyle test's results
 2. "By convention, the row and column indices are integers between 1 and n, where (1, 1) is the upper-left site" - fixed the design mismatch
 3. Now using the type boolean[][] instead of int[][]
+4. by definition, a full site is open fix
 */
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
@@ -105,7 +106,7 @@ public class Percolation {
         row--;
         col--;
 
-        return grid[row][col] == true;
+        return grid[row][col];
     }
 
     // is the site (row, col) full?
@@ -130,7 +131,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        if (isFull(size + 1, 1)) {
+        if (isFull(size + 1, 2)) {
             return true;
         }
         return false;
