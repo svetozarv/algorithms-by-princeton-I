@@ -32,11 +32,11 @@ public class Percolation {
         }
 
         this.uf = new WeightedQuickUnionUF(size*size + 2);
-        for (int i = 0; i < this.size; i++) {
-            this.uf.union(i, this.size*this.size);
+        for (int i = 0; i < size; i++) {
+            this.uf.union(i, size*size);
         }
-        for (int i = this.size * this.size - this.size; i < this.size * this.size; i++) {
-            this.uf.union(i, this.size*this.size + 1);
+        for (int i = size*size - size; i < size*size; i++) {
+            this.uf.union(i, size*size + 1);
         }
     }
 
@@ -69,30 +69,28 @@ public class Percolation {
         grid[row][col] = true;
         numberOfOpenSites++;
 
+        int i = convertIndexes(row, col);
+        
         // Check on the left
         if (col != 0 && grid[row][col - 1]) {
-            int i = convertIndexes(row, col);
             int j = convertIndexes(row, col - 1);
             uf.union(i, j);
         }
 
         // Check on the right
         if (col != size - 1 && grid[row][col + 1]) {
-            int i = convertIndexes(row, col);
             int j = convertIndexes(row, col + 1);
             uf.union(i, j);
         }
 
         // Check above
         if (row != 0 && grid[row - 1][col]) {
-            int i = convertIndexes(row, col);
             int j = convertIndexes(row - 1, col);
             uf.union(i, j);
         }
 
         // Check below
         if (row != size - 1 && grid[row + 1][col]) {
-            int i = convertIndexes(row, col);
             int j = convertIndexes(row + 1, col);
             uf.union(i, j);
         }
