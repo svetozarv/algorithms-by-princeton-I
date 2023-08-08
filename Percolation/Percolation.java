@@ -1,11 +1,17 @@
+/*
+1. edited the code based on checkstyle test's results
+2. "By convention, the row and column indices are integers between 1 and n, where (1, 1) is the upper-left site" - fixed the design mismatch
+3. Now using the type boolean[][] instead of int[][]
+*/
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import edu.princeton.cs.algs4.StdRandom;
 
 
 public class Percolation {
     private int size;
-    private int num_of_open_sites;
-    private int[][] grid;
+    private int numberOfOpenSites;
+    private boolean[][] grid;
     private WeightedQuickUnionUF uf;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -14,13 +20,13 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
         this.size = size;
-        this.num_of_open_sites = 0;
-        this.grid = new int[size][size];
+        this.numberOfOpenSites = 0;
+        this.grid = new boolean[size][size];
 
         // fill the grid with zeros
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                grid[i][j] = 0;
+                grid[i][j] = false;
             }
         }
 
@@ -35,8 +41,8 @@ public class Percolation {
 
     private void visualise() {
         System.out.println();
-        for (int[] row : grid) {
-            for (int i : row) {
+        for (boolean[] row : grid) {
+            for (boolean i : row) {
                 System.out.print(i + " ");
             }
             System.out.println();
@@ -48,45 +54,43 @@ public class Percolation {
         return size * row + col;
     }
 
-    private boolean connected(int p, int q) {
-        return uf.find(p) == uf.find(q);
-    }
-
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (row < 0 || col < 0 || row >= size || col >= size) {
+        if (row < 1 || col < 1 || row > size || col > size) {
             throw new IllegalArgumentException();
         }
-
         if (isOpen(row, col)) {
             return;
         }
-        grid[row][col] = 1;
-        num_of_open_sites++;
+        row--;
+        col--;
+
+        grid[row][col] = true;
+        numberOfOpenSites++;
 
         // Check on the left
-        if (col != 0 && grid[row][col - 1] == 1) {
+        if (col != 0 && grid[row][col - 1]) {
             int i = convertIndexes(row, col);
             int j = convertIndexes(row, col - 1);
             uf.union(i, j);
         }
 
         // Check on the right
-        if (col != size - 1 && grid[row][col + 1] == 1) {
+        if (col != size - 1 && grid[row][col + 1]) {
             int i = convertIndexes(row, col);
             int j = convertIndexes(row, col + 1);
             uf.union(i, j);
         }
 
         // Check above
-        if (row != 0 && grid[row - 1][col] == 1) {
+        if (row != 0 && grid[row - 1][col]) {
             int i = convertIndexes(row, col);
             int j = convertIndexes(row - 1, col);
             uf.union(i, j);
         }
 
         // Check below
-        if (row != size - 1 && grid[row + 1][col] == 1) {
+        if (row != size - 1 && grid[row + 1][col]) {
             int i = convertIndexes(row, col);
             int j = convertIndexes(row + 1, col);
             uf.union(i, j);
@@ -95,19 +99,25 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row < 0 || col < 0 || row >= size || col >= size) {
+        if (row < 1 || col < 1 || row > size || col > size) {
             throw new IllegalArgumentException();
         }
-        return grid[row][col] == 1;
+        row--;
+        col--;
+
+        return grid[row][col] == true;
     }
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row < 0 || col < 0 || row > size || col > size) {
+        if (row < 1 || col < 1 || row > size + 1 || col > size + 1) {
             throw new IllegalArgumentException();
         }
+        row--;
+        col--;
+
         int i = convertIndexes(row, col);
-        if (connected(i, size * size + 1)) {
+        if (uf.find(i) == uf.find(size*size)) {
             return true;
         }
         return false;
@@ -115,12 +125,12 @@ public class Percolation {
 
     // returns the number of open sites
     public int numberOfOpenSites() {
-        return num_of_open_sites;
+        return numberOfOpenSites;
     }
 
     // does the system percolate?
     public boolean percolates() {
-        if (isFull(size, 0)) {
+        if (isFull(size + 1, 1)) {
             return true;
         }
         return false;
@@ -139,7 +149,7 @@ public class Percolation {
         Percolation perc = new Percolation(size);
         
         int[] randCoordinates = new int[size*size];
-        for(int i = 0; i < size*size; i++) {
+        for (int i = 0; i < size*size; i++) {
             randCoordinates[i] = i;
         }
         StdRandom.shuffle(randCoordinates);
