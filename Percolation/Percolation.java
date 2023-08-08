@@ -1,8 +1,19 @@
-/*
-1. edited the code based on checkstyle test's results
-2. "By convention, the row and column indices are integers between 1 and n, where (1, 1) is the upper-left site" - fixed the design mismatch
-3. Now using the type boolean[][] instead of int[][]
-4. by definition, a full site is open fix
+/*  final version with NOT fixed backwash problem
+-------------------------------------------------------------------------------------
+Compilation:  PASSED
+API:          PASSED
+
+SpotBugs:     PASSED
+PMD:          PASSED
+Checkstyle:   PASSED
+
+Correctness:  32/38 tests passed
+Memory:       8/8 tests passed
+Timing:       20/20 tests passed
+
+Aggregate score: 90.53%
+[ Compilation: 5%, API: 5%, Style: 0%, Correctness: 60%, Timing: 10%, Memory: 20% ]
+-------------------------------------------------------------------------------------
 */
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
@@ -110,7 +121,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row < 1 || col < 1 || row > size + 1 || col > size + 1) {
+        if (row < 1 || col < 1 || row > size || col > size) {
             throw new IllegalArgumentException();
         }
         row--;
@@ -130,7 +141,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        if (isFull(size + 1, 2)) {
+        if (uf.find(size*size + 1) == uf.find(size*size)) {
             return true;
         }
         return false;
@@ -156,7 +167,7 @@ public class Percolation {
         
         int i = 0;
         while (!perc.percolates()) {
-            perc.open(randCoordinates[i] / size, randCoordinates[i] % size);
+            perc.open(randCoordinates[i] / size + 1, randCoordinates[i] % size + 1);
             i++;
         }
         
