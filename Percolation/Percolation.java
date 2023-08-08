@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import edu.princeton.cs.algs4.StdRandom;
 
 
 public class Percolation {
@@ -8,7 +7,6 @@ public class Percolation {
     private int num_of_open_sites;
     private int[][] grid;
     private WeightedQuickUnionUF uf;
-    double threshold;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int size) {
@@ -50,7 +48,7 @@ public class Percolation {
         return size * row + col;
     }
 
-    public boolean connected(int p, int q) {
+    private boolean connected(int p, int q) {
         return uf.find(p) == uf.find(q);
     }
 
@@ -58,6 +56,10 @@ public class Percolation {
     public void open(int row, int col) {
         if (row < 0 || col < 0 || row >= size || col >= size) {
             throw new IllegalArgumentException();
+        }
+
+        if (isOpen(row, col)) {
+            return;
         }
         grid[row][col] = 1;
         num_of_open_sites++;
@@ -119,9 +121,38 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         if (isFull(size, 0)) {
-            threshold = num_of_open_sites / size*size;
             return true;
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Usage: Percolation [n]");
+            return;
+        }
+        int size = Integer.parseInt(args[0]);
+        if (size < 0) {
+            throw new java.lang.IllegalArgumentException();
+        }
+
+        Percolation perc = new Percolation(size);
+        
+        int[] randCoordinates = new int[size*size];
+        for(int i = 0; i < size*size; i++) {
+            randCoordinates[i] = i;
+        }
+        StdRandom.shuffle(randCoordinates);
+        
+        int i = 0;
+        while (!perc.percolates()) {
+            perc.open(randCoordinates[i] / size, randCoordinates[i] % size);
+            i++;
+        }
+        
+        System.out.println();
+        perc.visualise();
+        System.out.println(perc.numberOfOpenSites());
+        System.out.println(size*size);
     }
 }

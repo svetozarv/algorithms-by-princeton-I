@@ -1,11 +1,12 @@
 {
     "java.project.sourcePaths": [
-        "myLib",
-        "Deques and Randomized Queues",
-        "Percolation"
+        "Percolation",
+        "Queues",
+        "."
     ],
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "myLib\\algs4.jar"
+        "myLib\\algs4.jar",
+        "algs4.jar"
     ]
 }

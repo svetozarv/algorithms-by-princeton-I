@@ -1,59 +1,46 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdStats;
+
 
 public class PercolationStats {
-    private int size;
     private int trials;
-    private List<Double> thresholds;
+    private double[] thresholds;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int size, int trials) {
         if (size <= 0 || trials <= 0) {
             throw new IllegalArgumentException();
         }
-        this.size = size;
         this.trials = trials;
-        this.thresholds = new ArrayList<>();
-        for (int i = 0; i < trials; i++) {
+        this.thresholds = new double[trials];
+
+        for (int j = 0; j < trials; j++) {
             Percolation perc = new Percolation(size);
-            List<Integer> random_coordinates = new ArrayList<>();
-            for (int k = 0; k < size*size; k++) {
-                random_coordinates.add(k);
+        
+            int[] randCoordinates = new int[size*size];
+            for(int i = 0; i < size*size; i++) {
+                randCoordinates[i] = i;
             }
-            Random rand = new Random();
-            for (int k = random_coordinates.size() - 1; k > 0; k--) {
-                int index = rand.nextInt(k + 1);
-                int temp = random_coordinates.get(index);
-                random_coordinates.set(index, random_coordinates.get(k));
-                random_coordinates.set(k, temp);
-            }
-            int index = 0;
+            StdRandom.shuffle(randCoordinates);
+        
+            int i = 0;
             while (!perc.percolates()) {
-                perc.open(random_coordinates.get(index) / size, random_coordinates.get(index) % size);
-                index++;
+                perc.open(randCoordinates[i] / size, randCoordinates[i] % size);
+                i++;
             }
-            this.thresholds.add(perc.threshold);
+            double numOfOpenSites = perc.numberOfOpenSites();
+            this.thresholds[j] = numOfOpenSites / (size*size);
         }
     }
 
     // sample mean of percolation threshold
     public double mean() {
-        double thresholds_sum = 0;
-        for (double threshold : this.thresholds) {
-            thresholds_sum += threshold;
-        }
-        return thresholds_sum / this.trials;
+        return StdStats.mean(thresholds);
     }
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        double mean = this.mean();
-        double numerator = 0;
-        for (double threshold : this.thresholds) {
-            numerator += Math.pow(threshold - mean, 2);
-        }
-        return Math.sqrt(numerator / (this.trials - 1));
+        return Math.sqrt(StdStats.stddev(thresholds));
     }
 
     // low endpoint of 95% confidence interval
@@ -68,6 +55,20 @@ public class PercolationStats {
 
     // test client
     public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Usage: PercolationStats [n] [T]");
+            return;
+        }
 
+        int n = Integer.parseInt(args[0]);
+        int t = Integer.parseInt(args[1]);
+        if (n < 0 || t < 0) {
+            throw new java.lang.IllegalArgumentException();
+        }
+
+        PercolationStats prcSts = new PercolationStats(n, t);
+        System.out.println("mean                    = " + prcSts.mean());
+        System.out.println("stddev                  = " + prcSts.stddev());
+        System.out.println("95% confidence interval = [" + prcSts.confidenceLo() + "," + prcSts.confidenceHi() + "]");
     }
 }
