@@ -1,8 +1,7 @@
 {
     "java.project.sourcePaths": [
-        ".",
-        "percolation",
-        "queues"
+        "queues",
+        "percolation"
     ],
     "java.project.referencedLibraries": [
         "lib/**/*.jar",

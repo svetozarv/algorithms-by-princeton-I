@@ -1,7 +1,6 @@
 // deque implementation with linked lists
 import java.util.Iterator;
 
-
 public class Deque<Item> implements Iterable<Item> {
 
     private Node first, last;

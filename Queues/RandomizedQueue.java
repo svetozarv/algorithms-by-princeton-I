@@ -1,4 +1,7 @@
-// rand queue implementation using resising arrays
+// randomized queue implementation using resising arrays
+// final version, but two iterators return the same sequence of values 
+// when they should return the same set of values but in a different order
+
 import java.util.Iterator;
 import edu.princeton.cs.algs4.StdRandom;
 
