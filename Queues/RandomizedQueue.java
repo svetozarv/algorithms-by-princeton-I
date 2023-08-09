@@ -89,9 +89,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         rq.enqueue("apple");
         rq.enqueue("grapes");
         
-        //System.out.println(rq.sample() + " chosen randomly");
-        System.out.println(rq.dequeue() + " removed");
-        System.out.println(rq.dequeue() + " removed");
+        // System.out.println(rq.sample() + " chosen randomly");
+        // System.out.println(rq.dequeue() + " removed");
+        // System.out.println(rq.dequeue() + " removed");
 
 
         for (String s : rq) {

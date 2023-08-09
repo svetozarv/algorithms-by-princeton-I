@@ -5,7 +5,7 @@ import java.util.Iterator;
 public class Deque<Item> implements Iterable<Item> {
 
     private Node first, last;
-    private int size;
+    private int size = 0;
 
     private class Node {
         Item item;
@@ -41,6 +41,7 @@ public class Deque<Item> implements Iterable<Item> {
         } else {
             oldfirst.prev = first;
         }
+        size++;
     }
 
     // add the item to the back
@@ -59,13 +60,25 @@ public class Deque<Item> implements Iterable<Item> {
             oldlast.next = last;
         }
         last.prev = oldlast;
+        size++;
     }
 
     // remove and return the item from the front
     public Item removeFirst() {
         if (isEmpty()) { throw new java.util.NoSuchElementException(); }
         Item item = first.item;
+        
+        if (first.next != null) {
+           first.next.prev = null; 
+        }
         first = first.next;
+        
+        size--;
+        if (size == 0) {
+            first = null;
+            last = null;
+        }
+
         return item;
     }
 
@@ -73,8 +86,18 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeLast() {
         if (isEmpty()) { throw new java.util.NoSuchElementException(); }
         Item item = last.item;
-        last.prev.next = null;
+        
+        if (last.prev != null) {
+            last.prev.next = null;
+        }
         last = last.prev;
+        
+        size--;
+        if (size == 0) {
+            first = null;
+            last = null;
+        }
+
         return item;
     }
 
