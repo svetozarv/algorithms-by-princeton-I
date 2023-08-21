@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class FastCollinearPoints {
     
-    private ArrayList<Point> pointsSet = new ArrayList<>();
     private ArrayList<LineSegment> segments = new ArrayList<>();
     private int numberOfSegments = 0;
     
@@ -16,7 +15,9 @@ public class FastCollinearPoints {
             if (points[i] == null) {
                 throw new java.lang.IllegalArgumentException("a point in the array is null");
             }
-            
+        }
+
+        for (int i = 0; i < points.length; i++) {
             for (int j = 0; j < points.length; j++) {
                 if (points[i].compareTo(points[j]) == 0) {
                     if (i == j) { continue; }
@@ -26,6 +27,7 @@ public class FastCollinearPoints {
         }
 
         for (int i = 0; i < points.length; i++) {
+            ArrayList<Point> pointsSet = new ArrayList<>();
             for (int j = 0; j < points.length; j++) {
                 if (i == j) { continue; }
                 pointsSet.add(points[j]);
@@ -42,19 +44,20 @@ public class FastCollinearPoints {
                 double slopeRight = points[i].slopeTo(pRight);
                 if (slopeLeft == slopeRight) {
                     if (lastAddedPointer != leftPointer) {
-                        collinearPoints.add(points[leftPointer]);
+                        collinearPoints.add(pointsSet.get(leftPointer));
                     }
-                    collinearPoints.add(points[rightPointer]);
+                    collinearPoints.add(pointsSet.get(rightPointer));
                     lastAddedPointer = rightPointer;
                 }
+                leftPointer++;
             }
 
-            if (collinearPoints.size() != 0) {
+            collinearPoints.sort(null);
+            if (collinearPoints.size() > 1) {
                 LineSegment segment = new LineSegment(points[i], collinearPoints.get(collinearPoints.size() - 1));
                 segments.add(segment);
                 numberOfSegments++;
             }
-
         }
     }
     
