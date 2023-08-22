@@ -6,7 +6,7 @@ public class TestClient {
         public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("input10.txt");
+        In in = new In("input56.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
