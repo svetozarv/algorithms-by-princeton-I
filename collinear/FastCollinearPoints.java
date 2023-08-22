@@ -52,9 +52,10 @@ public class FastCollinearPoints {
                 leftPointer++;
             }
 
-            collinearPoints.sort(null);
-            if (collinearPoints.size() > 1) {
-                LineSegment segment = new LineSegment(points[i], collinearPoints.get(collinearPoints.size() - 1));
+            collinearPoints.add(points[i]);
+            if (collinearPoints.size() > 4) {
+                collinearPoints.sort(null);
+                LineSegment segment = new LineSegment(collinearPoints.get(0), collinearPoints.get(collinearPoints.size() - 1));
                 segments.add(segment);
                 numberOfSegments++;
             }
