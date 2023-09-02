@@ -34,7 +34,7 @@ public class Board {
             for (int j = 0; j < n; j++) {
                 stringBoard.append(this.tiles[i][j] + " ");
             }
-            stringBoard.append("\n");;
+            stringBoard.append("\n");
         }
         return stringBoard.toString();
     }
@@ -252,5 +252,4 @@ public class Board {
         System.out.println("\nTwin: ");
         System.out.println(board.twin());
     }
-
 }

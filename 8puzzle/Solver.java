@@ -15,17 +15,17 @@ public class Solver {
         
         public Board board;
         public int moves = 0;
-        private int board_manhattan; 
         public SearchNode prevSearchNode;
+        private int boardManhattan; 
 
         public SearchNode(Board board, SearchNode prevSearchNode) {
             this.board = board;
             this.prevSearchNode = prevSearchNode;
-            this.board_manhattan = board.manhattan();
+            this.boardManhattan = board.manhattan();
         }
 
         public int priority() {
-            return board_manhattan + moves;
+            return boardManhattan + moves;
         }
 
         public int compareTo(SearchNode that) {
@@ -132,7 +132,7 @@ public class Solver {
     // test client 
     public static void main(String[] args) {
         // create initial board from file
-        In in = new In("test.txt");
+        In in = new In("puzzle3x3-28.txt");
         int n = in.readInt();
         int[][] tiles = new int[n][n];
         for (int i = 0; i < n; i++)
