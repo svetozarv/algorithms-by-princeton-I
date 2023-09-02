@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.In;
 
 public class Board {
     private int[][] tiles;
@@ -12,25 +12,31 @@ public class Board {
         if (tiles == null) throw new IllegalArgumentException();
         
         this.n = tiles.length;
-        this.tiles = new int[n][n];
+        this.tiles = createCopy(tiles);
+        this.manhattan = this.computeManhattan();
+    }
+
+    private int[][] createCopy(int[][] tiles) {
+        int[][] copy = new int[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                this.tiles[i][j] = tiles[i][j];
+                copy[i][j] = tiles[i][j];
             }
         }
-        this.manhattan = this.computeManhattan();
+        return copy;
     }
 
     // string representation of this board
     public String toString() {
-        String stringBoard = "" + n + "\n";
+        StringBuilder stringBoard = new StringBuilder(Integer.toString(n));
+        stringBoard.append("\n");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                stringBoard += this.tiles[i][j] + " ";
+                stringBoard.append(this.tiles[i][j] + " ");
             }
-            stringBoard += "\n";
+            stringBoard.append("\n");;
         }
-        return stringBoard;
+        return stringBoard.toString();
     }
 
     // board dimension n
@@ -60,6 +66,7 @@ public class Board {
         int manhattanDistanses = 0;
         for (int row = 0; row < n; row++) {
             for (int col = 0; col < n; col++) {
+                if (tiles[row][col] == 0) continue;
                 if (tiles[row][col] - 1 != fromDoubleToOneIndex(row, col)) {
                     int[] indexes = fromOneToDoubleIndex(tiles[row][col] - 1);
                     manhattanDistanses += Math.abs(indexes[0] - row);
@@ -72,7 +79,7 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
-        if (this.hamming() == 0 && this.tiles[n-1][n-1] == 0){
+        if (this.hamming() == 0 && this.tiles[n-1][n-1] == 0) {
             return true;
         }
         return false;
@@ -81,6 +88,9 @@ public class Board {
     // does this board equal y?
     public boolean equals(Object y) {
         if (y == null) return false;
+        if (this == y) return true;
+        if (!(y instanceof Board)) return false;
+        
         Board board = (Board) y;
         if (board.dimension() != this.dimension()) return false;
 
@@ -116,50 +126,65 @@ public class Board {
         
         
         // exchange 0 with the left tile
-        Board neighbor1 = new Board(tiles);
         if (col > 0) {
-            temp = neighbor1.tiles[row][col-1];
-            neighbor1.tiles[row][col] = temp;
-            neighbor1.tiles[row][col-1] = 0;
+            temp = this.tiles[row][col-1];
+            this.tiles[row][col] = temp;
+            this.tiles[row][col-1] = 0;
             
+            Board neighbor1 = new Board(tiles);
             neighbors.add(neighbor1);
+            
+            // revert changes
+            this.tiles[row][col] = 0;
+            this.tiles[row][col-1] = temp;
         }
         
         // exchange 0 with the right tile
-        Board neighbor2 = new Board(tiles);
         if (col < n - 1) {
-            temp = neighbor2.tiles[row][col+1];
-            neighbor2.tiles[row][col] = temp;
-            neighbor2.tiles[row][col+1] = 0;
+            temp = this.tiles[row][col+1];
+            this.tiles[row][col] = temp;
+            this.tiles[row][col+1] = 0;
             
+            Board neighbor2 = new Board(tiles);
             neighbors.add(neighbor2);
+            
+            // revert changes
+            this.tiles[row][col] = 0;
+            this.tiles[row][col+1] = temp;
         }
         
         // exchange 0 with the upper tile
-        Board neighbor3 = new Board(tiles);
         if (row > 0) {
-            temp = neighbor3.tiles[row-1][col];
-            neighbor3.tiles[row][col] = temp;
-            neighbor3.tiles[row-1][col] = 0;
+            temp = this.tiles[row-1][col];
+            this.tiles[row][col] = temp;
+            this.tiles[row-1][col] = 0;
             
+            Board neighbor3 = new Board(tiles);
             neighbors.add(neighbor3);
+
+            // revert changes
+            this.tiles[row][col] = 0;
+            this.tiles[row-1][col] = temp;
         }
         
         // exchange 0 with the bottom tile
-        Board neighbor4 = new Board(tiles);
         if (row < n - 1) {
-            temp = neighbor4.tiles[row+1][col];
-            neighbor4.tiles[row][col] = temp;
-            neighbor4.tiles[row+1][col] = 0;
-                        
+            temp = this.tiles[row+1][col];
+            this.tiles[row][col] = temp;
+            this.tiles[row+1][col] = 0;
+            
+            Board neighbor4 = new Board(tiles);
             neighbors.add(neighbor4);
+            
+            // revert changes
+            this.tiles[row][col] = 0;
+            this.tiles[row+1][col] = temp;
         }
         return neighbors;
     }
 
     // a board that is obtained by exchanging the last pair of tiles
     public Board twin() {
-        Board twin = new Board(tiles);
         int temp = -1;
         int[] lastElementIndexes = {-1, -1};
         int[] prelastElementIndexes = {-1, -1};
@@ -176,10 +201,16 @@ public class Board {
             }
         }
         // swap elements in tiles
-        temp = twin.tiles[lastElementIndexes[0]][lastElementIndexes[1]];
-        twin.tiles[lastElementIndexes[0]][lastElementIndexes[1]] = twin.tiles[prelastElementIndexes[0]][prelastElementIndexes[1]];
-        twin.tiles[prelastElementIndexes[0]][prelastElementIndexes[1]] = temp;
+        temp = this.tiles[lastElementIndexes[0]][lastElementIndexes[1]];
+        this.tiles[lastElementIndexes[0]][lastElementIndexes[1]] = this.tiles[prelastElementIndexes[0]][prelastElementIndexes[1]];
+        this.tiles[prelastElementIndexes[0]][prelastElementIndexes[1]] = temp;
         
+        Board twin = new Board(tiles);
+
+        // revert changes
+        this.tiles[prelastElementIndexes[0]][prelastElementIndexes[1]] = this.tiles[lastElementIndexes[0]][lastElementIndexes[1]];
+        this.tiles[lastElementIndexes[0]][lastElementIndexes[1]] = temp;
+
         return twin;
     }
 
@@ -201,22 +232,16 @@ public class Board {
 
     // unit testing (not graded)
     public static void main(String[] args) {
-        int n = 3;
-        int[] a = new int[n*n];
-        for (int i = 0; i < n*n; i++) {
-            a[i] = i;
-        }
-        StdRandom.shuffle(a);
-
+        // read from file
+        In in = new In("test.txt");
+        int n = in.readInt();
         int[][] tiles = new int[n][n];
-        int k = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                tiles[i][j] = a[k];
-                k++;   
-            }
-        }
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                tiles[i][j] = in.readInt();
         Board board = new Board(tiles);
+
+        // unit test
         System.out.println(board);
         System.out.println(board.hamming());
         System.out.println(board.manhattan());

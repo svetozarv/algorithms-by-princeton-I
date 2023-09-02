@@ -7,11 +7,11 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
-    private SearchNode answerNode;
     private SearchNode initialRoot;
+    private SearchNode answerNode;
+    private boolean solvable;
 
-
-    private class SearchNode implements Comparable<SearchNode>{
+    private class SearchNode implements Comparable<SearchNode> {
         
         public Board board;
         public int moves = 0;
@@ -27,8 +27,10 @@ public class Solver {
         }
 
         public int compareTo(SearchNode that) {
-            if (this.priority() < that.priority()) return -1;
-            if (this.priority() > that.priority()) return 1;
+            int thisPrio = this.priority();
+            int thatPrio = that.priority();
+            if (thisPrio < thatPrio) return -1;
+            if (thisPrio > thatPrio) return 1;
             return 0;
         }
 
@@ -46,14 +48,14 @@ public class Solver {
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
         if (initial == null) throw new IllegalArgumentException();
+        
         initialRoot = new SearchNode(initial, null);
-    }
+        answerNode = initialRoot;
 
-    // is the initial board solvable?
-    public boolean isSolvable() {
-        if (initialRoot.board.isGoal()) {
+        if (initial.isGoal()) {
             answerNode = initialRoot;
-            return true;
+            solvable = true;
+            return;
         }
 
         MinPQ<SearchNode> pqInitial = new MinPQ<>(initialRoot.priorityComparator());
@@ -68,41 +70,56 @@ public class Solver {
             
             if (minPriorityInitialNode.board.isGoal()) {
                 answerNode = minPriorityInitialNode;
-                return true;
+                solvable = true;
+                return;
             }
             if (minPriorityTwinNode.board.isGoal()) {
-                answerNode = null;
-                return false;
+                solvable = false;
+                return;
             }
 
             for (Board neighbor : minPriorityInitialNode.board.neighbors()) {
                 SearchNode node = new SearchNode(neighbor, minPriorityInitialNode);
                 if (minPriorityInitialNode.prevSearchNode != null) {
-                    if (neighbor.equals(minPriorityInitialNode.prevSearchNode.board)) {
-                        node.moves++;
+                    if (!neighbor.equals(minPriorityInitialNode.prevSearchNode.board)) {
+                        node.moves = node.prevSearchNode.moves + 1;
                         pqInitial.insert(node);
                     }
+                } else {
+                    node.moves = node.prevSearchNode.moves + 1;
+                    pqInitial.insert(node);
                 }
             }
             for (Board neighbor : minPriorityTwinNode.board.neighbors()) {
                 SearchNode node = new SearchNode(neighbor, minPriorityTwinNode);
                 if (minPriorityTwinNode.prevSearchNode != null) {
-                    if (neighbor.equals(minPriorityTwinNode.prevSearchNode.board)) {
-                        node.moves++;
+                    if (!neighbor.equals(minPriorityTwinNode.prevSearchNode.board)) {
+                        node.moves = node.prevSearchNode.moves + 1;
                         pqTwin.insert(node);
                     }
+                } else {
+                    node.moves = node.prevSearchNode.moves + 1;
+                    pqTwin.insert(node);
                 }
             }
         }
     }
 
+    // is the initial board solvable?
+    public boolean isSolvable() {
+        return solvable;
+    }
+
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
+        if (!solvable) return -1;
         return answerNode.moves;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
+        if (!solvable) return null;
+
         LinkedList<Board> solution = new LinkedList<>();
         SearchNode node = answerNode;
         while (node != null) {
@@ -115,7 +132,7 @@ public class Solver {
     // test client 
     public static void main(String[] args) {
         // create initial board from file
-        In in = new In("puzzle3x3-09.txt");
+        In in = new In("test.txt");
         int n = in.readInt();
         int[][] tiles = new int[n][n];
         for (int i = 0; i < n; i++)
