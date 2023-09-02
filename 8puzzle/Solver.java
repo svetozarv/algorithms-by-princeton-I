@@ -15,22 +15,22 @@ public class Solver {
         
         public Board board;
         public int moves = 0;
+        private int board_manhattan; 
         public SearchNode prevSearchNode;
 
         public SearchNode(Board board, SearchNode prevSearchNode) {
             this.board = board;
             this.prevSearchNode = prevSearchNode;
+            this.board_manhattan = board.manhattan();
         }
 
         public int priority() {
-            return board.manhattan() + moves;
+            return board_manhattan + moves;
         }
 
         public int compareTo(SearchNode that) {
-            int thisPrio = this.priority();
-            int thatPrio = that.priority();
-            if (thisPrio < thatPrio) return -1;
-            if (thisPrio > thatPrio) return 1;
+            if (this.priority() < that.priority()) return -1;
+            if (this.priority() > that.priority()) return 1;
             return 0;
         }
 
