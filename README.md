@@ -11,20 +11,5 @@ There are 6 programming assignments in this course.
 5. [8 Puzzle](https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/specification.php)
 6. [Kd-Trees](https://coursera.cs.princeton.edu/algs4/assignments/kdtree/specification.php)
 
-# How to run the assignments
-`algs4.jar` (also availible [here](https://github.com/kevin-wayne/algs4/)) is a library, provided by the course. You must download and add `algs4.jar` to the CLASSPATH environment variable, or you can compile and execute your program using the -classpath or -cp option, as shown below.
-
-
-## For Windows:
-If you have downloaded the library in, say `C:\Users\username\algs4\algs4.jar`.
-```
-javac -cp .;C:\Users\username\algs4\algs4.jar HelloWorld.java
-java -cp .;C:\Users\username\algs4\algs4.jar HelloWorld
-```
-
-## For Linux and Mac OS
-Use `:` instead of `;`, then specify full path to the file:
-```
-javac -cp .:~/algs4/algs4.jar HelloWorld.java
-java -cp .:~/algs4/algs4.jar HelloWorld
-```
+# Requirements
+`algs4.jar` (also availible [here](https://github.com/kevin-wayne/algs4/)) is a library, provided by the course. You must download and add `algs4.jar` to the CLASSPATH environment variable, or you can compile and execute your program using the -classpath or -cp option.
