@@ -6,7 +6,7 @@ This course covers the essential information that every serious programmer needs
 
 
 # How to run
-`algs4.jar` (also availible [here](https://github.com/kevin-wayne/algs4/)) is a library. You must download and add `algs4.jar` to the CLASSPATH environment variable, or you can compile and execute your program using the -classpath or -cp option, as shown below.
+`algs4.jar` (also availible [here](https://github.com/kevin-wayne/algs4/)) is a library, provided by the course. You must download and add `algs4.jar` to the CLASSPATH environment variable, or you can compile and execute your program using the -classpath or -cp option, as shown below.
 
 
 ## For Windows:
