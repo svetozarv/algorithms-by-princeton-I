@@ -49,7 +49,11 @@ public class Percolation {
         System.out.println();
         for (boolean[] row : grid) {
             for (boolean i : row) {
-                System.out.print(i + " ");
+                if (i == true) {
+                    System.out.print("-" + " ");
+                } else {
+                    System.out.print("■" + " ");
+                }
             }
             System.out.println();
         }
