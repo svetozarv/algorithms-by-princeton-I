@@ -1,5 +1,5 @@
 ## Overview
-`Percolation.java` is a simulation, where sites are opened until water can flow from top to bottom. It takes `n` as command-line argument and creates an n-by-n grid. In the end of a program it outputs total number of sites and number of sites opened.
+`Percolation.java` is a simulation, where sites are randomly opened until water can flow from top to bottom. It takes `n` as command-line argument and creates an n-by-n grid. In the end of a program it outputs total number of sites and number of sites opened.
 
 `PercolationStats.java` performs series of such simulations, calculates probability when the system almost always percolates. It takes `n` and `trials` as command-line argaments, where `n` is grid size and `trials` is number of such simulations. The program returns mean, standart deviation and confidence interval.
 
