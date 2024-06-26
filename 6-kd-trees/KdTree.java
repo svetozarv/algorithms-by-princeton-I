@@ -44,35 +44,43 @@ public class KdTree {
         }
 
         Node currNode = this.root;
-        while () {   
+        while (currNode != null) {   
             if (currNode.dimension == false) {
                 if (p.x() > currNode.point.x()) {
-                    if (currNode.right == null)
+                    if (currNode.right == null) {
                         currNode.right = createNode(p, true);
-                    else
+                        return;
+                    } else {
                         currNode = currNode.right;
+                    }
                 } else {
-                    if (currNode.left == null) 
+                    if (currNode.left == null){
                         currNode.left = createNode(p, true);
-                    else 
+                        return;
+                    } else {
                         currNode = currNode.left;
+                    }
                 }
                 
             } else if (currNode.dimension == true) {
                 if (p.y() > currNode.point.y()) {
-                    if (currNode.right == null)
+                    if (currNode.right == null) {
                         currNode.right = createNode(p, true);
-                    else
+                        return;
+                    } else {
                         currNode = currNode.right;
+                    }
                 } else {
-                    if (currNode.left == null) 
+                    if (currNode.left == null) {
                         currNode.left = createNode(p, true);
-                    else 
+                        return;
+                    } else {
                         currNode = currNode.left;
+                    }
                 }
             }
         }
-            this.size++;
+        this.size++;
     }
 
     // does the set contain point p? 
