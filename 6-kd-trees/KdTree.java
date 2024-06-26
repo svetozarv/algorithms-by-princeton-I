@@ -2,8 +2,6 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import java.util.TreeSet;
 
-import javax.swing.tree.TreeNode;
-
 public class KdTree {
     
     private Node root;
@@ -46,34 +44,35 @@ public class KdTree {
         }
 
         Node currNode = this.root;
-
-        if (currNode.dimension == false) {
-            if (p.x() > currNode.point.x()) {
-                if (currNode.right == null)
-                    currNode.right = createNode(p, true);
-                else
-                    currNode = currNode.right;
-            } else {
-                if (currNode.left == null) 
-                    currNode.left = createNode(p, true);
-                else 
-                    currNode = currNode.left;
-            }
-
-        } else if (currNode.dimension == true) {
-            if (p.y() > currNode.point.y()) {
-                if (currNode.right == null)
-                    currNode.right = createNode(p, true);
-                else
-                    currNode = currNode.right;
-            } else {
-                if (currNode.left == null) 
-                    currNode.left = createNode(p, true);
-                else 
-                    currNode = currNode.left;
+        while () {   
+            if (currNode.dimension == false) {
+                if (p.x() > currNode.point.x()) {
+                    if (currNode.right == null)
+                        currNode.right = createNode(p, true);
+                    else
+                        currNode = currNode.right;
+                } else {
+                    if (currNode.left == null) 
+                        currNode.left = createNode(p, true);
+                    else 
+                        currNode = currNode.left;
+                }
+                
+            } else if (currNode.dimension == true) {
+                if (p.y() > currNode.point.y()) {
+                    if (currNode.right == null)
+                        currNode.right = createNode(p, true);
+                    else
+                        currNode = currNode.right;
+                } else {
+                    if (currNode.left == null) 
+                        currNode.left = createNode(p, true);
+                    else 
+                        currNode = currNode.left;
+                }
             }
         }
-        this.size++;
+            this.size++;
     }
 
     // does the set contain point p? 
@@ -93,9 +92,21 @@ public class KdTree {
         return currNode;
     }
     
+    private void drawChilds(Node node) {
+        if (node.left != null) {
+            node.left.point.draw();
+            drawChilds(node.left);
+        }
+        if (node.right != null) {
+            node.right.point.draw();
+            drawChilds(node.right);
+        }
+    }
+    
     // draw all points to standard draw 
     public void draw() {
-        
+        root.point.draw();
+        drawChilds(root);
     }
     
     // all points that are inside the rectangle (or on the boundary) 
