@@ -1,6 +1,5 @@
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
-import java.util.TreeSet;
 
 public class KdTree {
     
@@ -49,6 +48,7 @@ public class KdTree {
                 if (p.x() > currNode.point.x()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, true);
+                        this.size++;
                         return;
                     } else {
                         currNode = currNode.right;
@@ -56,6 +56,7 @@ public class KdTree {
                 } else {
                     if (currNode.left == null){
                         currNode.left = createNode(p, true);
+                        this.size++;
                         return;
                     } else {
                         currNode = currNode.left;
@@ -66,6 +67,7 @@ public class KdTree {
                 if (p.y() > currNode.point.y()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, true);
+                        this.size++;
                         return;
                     } else {
                         currNode = currNode.right;
@@ -73,6 +75,7 @@ public class KdTree {
                 } else {
                     if (currNode.left == null) {
                         currNode.left = createNode(p, true);
+                        this.size++;
                         return;
                     } else {
                         currNode = currNode.left;
@@ -80,7 +83,6 @@ public class KdTree {
                 }
             }
         }
-        this.size++;
     }
 
     // does the set contain point p? 
@@ -90,14 +92,23 @@ public class KdTree {
         }
 
         Node currNode = root;
-        while (currNode != null && !currNode.point.equals(p)) {
-            if (p.) {
-                currNode = currNode.right;
-            } else {
-                currNode = currNode.left;
+        while (currNode != null) {   
+            if (p.compareTo(currNode.point) == 0) return true;
+            if (currNode.dimension == false) {
+                if (p.x() > currNode.point.x()) {
+                    currNode = currNode.right;
+                } else {
+                    currNode = currNode.left;
+                }
+            } else if (currNode.dimension == true) {
+                if (p.y() > currNode.point.y()) {
+                    currNode = currNode.right;
+                } else {
+                    currNode = currNode.left;
+                }
             }
         }
-        return currNode;
+        return false;
     }
     
     private void drawChilds(Node node) {
