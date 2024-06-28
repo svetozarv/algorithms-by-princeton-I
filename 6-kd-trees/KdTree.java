@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 
@@ -66,7 +68,7 @@ public class KdTree {
             } else if (currNode.dimension == true) {
                 if (p.y() > currNode.point.y()) {
                     if (currNode.right == null) {
-                        currNode.right = createNode(p, true);
+                        currNode.right = createNode(p, false);
                         this.size++;
                         return;
                     } else {
@@ -74,7 +76,7 @@ public class KdTree {
                     }
                 } else {
                     if (currNode.left == null) {
-                        currNode.left = createNode(p, true);
+                        currNode.left = createNode(p, false);
                         this.size++;
                         return;
                     } else {
@@ -132,13 +134,81 @@ public class KdTree {
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) {
             throw new IllegalArgumentException();
-        }
+        }        
+        LinkedList<Point2D> list = new LinkedList<>();
+        recursiveRange(rect, list, root);
+        return list;
     }
     
+    private void recursiveRange(RectHV rect, LinkedList<Point2D> list, Node node) {
+        if (node == null) return;
+        if (rect.contains(node.point)) {
+            list.add(node.point);
+        }
+        if (node.dimension == false) {
+
+            // if line intersects the rect, search both
+            if (rect.xmin() < node.point.x() && node.point.x() < rect.xmax()) {
+                recursiveRange(rect, list, node.left);
+                recursiveRange(rect, list, node.right);
+            } else if (rect.xmax() < node.point.x()) {  // if rect is on the left
+                // go left
+                recursiveRange(rect, list, node.left); 
+            } else if (rect.xmin() > node.point.x()) {
+                // go right
+                recursiveRange(rect, list, node.right);
+            }
+            
+        } else {
+            // if line intersects the rect, search both
+            if (rect.ymin() < node.point.y() && node.point.y() < rect.ymax()) {
+                recursiveRange(rect, list, node.left);
+                recursiveRange(rect, list, node.right);
+            } else if (rect.ymax() < node.point.y()) {  // if rect is below
+                // go down
+                recursiveRange(rect, list, node.left); 
+            } else if (rect.ymin() > node.point.y()) {
+                // go up
+                recursiveRange(rect, list, node.right);
+            }
+        }
+    }
+
+    private void searchSubtree(Point2D p, Node node) {
+        if p.x() > node.point.x()
+            go right
+        else 
+            go left
+
+    }
+
     // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
         if (p == null) {
             throw new IllegalArgumentException();
+        }
+
+        Node currNode = root;
+        Point2D closest = root.point;
+        double minDist = closest.distanceTo(p);
+        double dist;
+
+        while () {
+            dist = currNode.point.distanceTo(p);
+            if (currNode.dimension == false) {
+                if (p.x() > currNode.point.x()) {
+                    currNode = currNode.right;
+                } else {
+                    currNode = currNode.left;
+                }
+            } else {
+                if (p.y() > currNode.point.y()) {
+                    currNode = currNode.right;
+                } else {
+                    currNode = currNode.left;
+                }
+            }
+            
         }
     }
  
