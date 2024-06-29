@@ -174,17 +174,9 @@ public class KdTree {
         }
     }
 
-    private void searchSubtree(Point2D p, Node node) {
-        if p.x() > node.point.x()
-            go right
-        else 
-            go left
-
-    }
-
     // a nearest neighbor in the set to point p; null if the set is empty 
     public Point2D nearest(Point2D p) {
-        if (p == null) {
+        if (p == null || this.isEmpty()) {
             throw new IllegalArgumentException();
         }
 
@@ -192,24 +184,18 @@ public class KdTree {
         Point2D closest = root.point;
         double minDist = closest.distanceTo(p);
         double dist;
+        
+    }
 
-        while () {
-            dist = currNode.point.distanceTo(p);
-            if (currNode.dimension == false) {
-                if (p.x() > currNode.point.x()) {
-                    currNode = currNode.right;
-                } else {
-                    currNode = currNode.left;
-                }
-            } else {
-                if (p.y() > currNode.point.y()) {
-                    currNode = currNode.right;
-                } else {
-                    currNode = currNode.left;
-                }
-            }
-            
+
+    private void searchSubtree(Point2D p, Node node, double minDist) {
+        double dist = node.point.distanceTo(p);
+        if (p.x() > node.point.x()) {
+            node = node.right;
+        } else {
+            node = node.left;
         }
+
     }
  
     // unit testing of the methods (optional) 
