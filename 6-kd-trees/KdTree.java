@@ -189,29 +189,28 @@ public class KdTree {
     }
 
 
-    private void nearestRecursive(Point2D p, Node node, double minDist, Point2D[] array) {
-        
+    private void nearestRecursive(Point2D p, Node node, double absMinDist, Point2D[] array) {
         if (node == null) return;
-        double dist = node.point.distanceTo(p);
-        if (dist <= minDist) { 
-            minDist = dist;
-            array[0] = node.point;
+        double distC = node.point.distanceTo(p);
+        double distL = Double.POSITIVE_INFINITY;
+        double distR = Double.POSITIVE_INFINITY;
+        if (node.left != null) {
+            distL = node.left.point.distanceTo(p);
         }
+        if (node.right != null) {
+            distR = node.right.point.distanceTo(p);
+        }
+        
 
-        // 
-        if (node.dimension == false) {
-            if (p.x() < node.point.x()) {
-                nearestRecursive(p, node.left, minDist, array);         // check left first
-                nearestRecursive(p, node.right, minDist, array);        // check right
-            }
-        } else if (node.dimension == true) {
-            if (p.y() < node.point.y()) {
-                nearestRecursive(p, node.left, minDist, array);         // check lower first
-                nearestRecursive(p, node.right, minDist, array);        // check upper
-            } else {
-                nearestRecursive(p, node.right, minDist, array);        // check upper first
-                nearestRecursive(p, node.left, minDist, array);         // check lower
-            }
+        if (distL < absMinDist) {
+            nearestRecursive(p, node.left, absMinDist, array);
+        }
+        if (distC < absMinDist) {
+            nearestRecursive(p, node.left, absMinDist, array);
+            nearestRecursive(p, node.right, absMinDist, array);
+        }
+        if (distR < absMinDist) {
+            nearestRecursive(p, node.right, absMinDist, array);
         }
     }
  
