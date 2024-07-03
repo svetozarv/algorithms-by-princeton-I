@@ -190,14 +190,19 @@ public class KdTree {
 
 
     private void nearestRecursive(Point2D p, Node node, double minDist) {
+        
+        if (node == null) return;
         double dist = node.point.distanceTo(p);
-        if (dist < minDist) { minDist = dist; }
+        if (dist <= minDist) { 
+            minDist = dist;
+        } else return;
+
         if (p.x() < node.point.x()) {
-            // check left first
-            // check right
+            nearestRecursive(p, node.left, minDist);        // check left first
+            nearestRecursive(p, node.right, minDist);        // check right
         } else {
-            // check right first
-            // check left
+            nearestRecursive(p, node.right, minDist);        // check right first
+            nearestRecursive(p, node.left, minDist);        // check left
         }
 
     }
