@@ -174,7 +174,8 @@ public class KdTree {
         }
     }
 
-    // a nearest neighbor in the set to point p; null if the set is empty 
+    // a nearest neighbor in the set to point p; null if the set is empty\
+    // similar to contains, searches for query point
     public Point2D nearest(Point2D p) {
         if (p == null || this.isEmpty()) {
             throw new IllegalArgumentException();
@@ -188,12 +189,15 @@ public class KdTree {
     }
 
 
-    private void searchSubtree(Point2D p, Node node, double minDist) {
+    private void nearestRecursive(Point2D p, Node node, double minDist) {
         double dist = node.point.distanceTo(p);
-        if (p.x() > node.point.x()) {
-            node = node.right;
+        if (dist < minDist) { minDist = dist; }
+        if (p.x() < node.point.x()) {
+            // check left first
+            // check right
         } else {
-            node = node.left;
+            // check right first
+            // check left
         }
 
     }
