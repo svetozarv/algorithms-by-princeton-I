@@ -181,30 +181,38 @@ public class KdTree {
             throw new IllegalArgumentException();
         }
 
-        Node currNode = root;
-        Point2D closest = root.point;
-        double minDist = closest.distanceTo(p);
-        double dist;
-        
+        double minDist = root.point.distanceTo(p);
+        Point2D[] array = new Point2D[1];
+
+        nearestRecursive(p, root, minDist, array);
+        return array[0];
     }
 
 
-    private void nearestRecursive(Point2D p, Node node, double minDist) {
+    private void nearestRecursive(Point2D p, Node node, double minDist, Point2D[] array) {
         
         if (node == null) return;
         double dist = node.point.distanceTo(p);
         if (dist <= minDist) { 
             minDist = dist;
-        } else return;
-
-        if (p.x() < node.point.x()) {
-            nearestRecursive(p, node.left, minDist);        // check left first
-            nearestRecursive(p, node.right, minDist);        // check right
-        } else {
-            nearestRecursive(p, node.right, minDist);        // check right first
-            nearestRecursive(p, node.left, minDist);        // check left
+            array[0] = node.point;
         }
 
+        // 
+        if (node.dimension == false) {
+            if (p.x() < node.point.x()) {
+                nearestRecursive(p, node.left, minDist, array);         // check left first
+                nearestRecursive(p, node.right, minDist, array);        // check right
+            }
+        } else if (node.dimension == true) {
+            if (p.y() < node.point.y()) {
+                nearestRecursive(p, node.left, minDist, array);         // check lower first
+                nearestRecursive(p, node.right, minDist, array);        // check upper
+            } else {
+                nearestRecursive(p, node.right, minDist, array);        // check upper first
+                nearestRecursive(p, node.left, minDist, array);         // check lower
+            }
+        }
     }
  
     // unit testing of the methods (optional) 
