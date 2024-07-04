@@ -49,25 +49,6 @@ public class KdTree {
             if (currNode.dimension == false) {
                 if (p.x() > currNode.point.x()) {
                     if (currNode.right == null) {
-                        currNode.right = createNode(p, true);
-                        this.size++;
-                        return;
-                    } else {
-                        currNode = currNode.right;
-                    }
-                } else {
-                    if (currNode.left == null){
-                        currNode.left = createNode(p, true);
-                        this.size++;
-                        return;
-                    } else {
-                        currNode = currNode.left;
-                    }
-                }
-                
-            } else if (currNode.dimension == true) {
-                if (p.y() > currNode.point.y()) {
-                    if (currNode.right == null) {
                         currNode.right = createNode(p, false);
                         this.size++;
                         return;
@@ -75,7 +56,7 @@ public class KdTree {
                         currNode = currNode.right;
                     }
                 } else {
-                    if (currNode.left == null) {
+                    if (currNode.left == null){
                         currNode.left = createNode(p, false);
                         this.size++;
                         return;
@@ -83,7 +64,30 @@ public class KdTree {
                         currNode = currNode.left;
                     }
                 }
+            } else if (currNode.dimension == true) {
+                if (p.y() > currNode.point.y()) {
+                    if (currNode.right == null) {
+                        currNode.right = createNode(p, true);
+                        this.size++;
+                        return;
+                    } else {
+                        currNode = currNode.right;
+                    }
+                } else {
+                    if (currNode.left == null) {
+                        currNode.left = createNode(p, true);
+                        this.size++;
+                        return;
+                    } else {
+                        currNode = currNode.left;
+                    }
+                }
             }
+        }
+
+        if (this.root == null) {
+            this.root = createNode(p, false);
+            this.size++;
         }
     }
 
@@ -181,36 +185,47 @@ public class KdTree {
             throw new IllegalArgumentException();
         }
 
-        double minDist = root.point.distanceTo(p);
-        Point2D[] array = new Point2D[1];
+        Point2D[] point = new Point2D[1];
+        double[] radius = new double[1]; 
+        radius[0] = root.point.distanceTo(p);
 
-        nearestRecursive(p, root, minDist, array);
-        return array[0];
+        nearestRecursive(p, root, radius, point);
+        return point[0];
     }
 
 
-    private void nearestRecursive(Point2D p, Node node, double minDist, Point2D[] array) {
+    private void nearestRecursive(Point2D p, Node node, double[] radius, Point2D[] point) {
         
         if (node == null) return;
         double dist = node.point.distanceTo(p);
-        if (dist <= minDist) { 
-            minDist = dist;
-            array[0] = node.point;
+        if (dist <= radius[0]) { 
+            radius[0] = dist;
+            point[0] = node.point;
         }
 
-        // 
         if (node.dimension == false) {
             if (p.x() < node.point.x()) {
-                nearestRecursive(p, node.left, minDist, array);         // check left first
-                nearestRecursive(p, node.right, minDist, array);        // check right
+                nearestRecursive(p, node.left, radius, point);         // check left first
+                if (radius[0] > Math.abs(p.x() - node.point.x())) {
+                    nearestRecursive(p, node.right, radius, point);        // check right
+                }
+            } else {
+                nearestRecursive(p, node.right, radius, point);         // check right first
+                if (radius[0] > Math.abs(p.x() - node.point.x())) {
+                    nearestRecursive(p, node.left, radius, point);        // check left
+                }
             }
         } else if (node.dimension == true) {
             if (p.y() < node.point.y()) {
-                nearestRecursive(p, node.left, minDist, array);         // check lower first
-                nearestRecursive(p, node.right, minDist, array);        // check upper
+                nearestRecursive(p, node.left, radius, point);         // check lower first
+                if (radius[0] > Math.abs(p.y() - node.point.y())) {
+                    nearestRecursive(p, node.right, radius, point);        // check upper
+                }
             } else {
-                nearestRecursive(p, node.right, minDist, array);        // check upper first
-                nearestRecursive(p, node.left, minDist, array);         // check lower
+                nearestRecursive(p, node.right, radius, point);        // check upper first
+                if (radius[0] > Math.abs(p.y() - node.point.y())) {
+                    nearestRecursive(p, node.left, radius, point);         // check lower
+                }
             }
         }
     }
