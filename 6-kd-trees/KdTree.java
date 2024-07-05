@@ -27,7 +27,7 @@ public class KdTree {
 
     // number of points in the set 
     public int size() {
-        return size;
+        return this.size;
     }
 
 
@@ -35,6 +35,7 @@ public class KdTree {
         Node newNode = new Node();
         newNode.point = p;
         newNode.dimension = dimension;
+        this.size++;
         return newNode; 
     }
 
@@ -50,15 +51,13 @@ public class KdTree {
                 if (p.x() > currNode.point.x()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, false);
-                        this.size++;
                         return;
                     } else {
                         currNode = currNode.right;
                     }
-                } else {
+                } else if (p.x() < currNode.point.x()){
                     if (currNode.left == null){
                         currNode.left = createNode(p, false);
-                        this.size++;
                         return;
                     } else {
                         currNode = currNode.left;
@@ -68,15 +67,13 @@ public class KdTree {
                 if (p.y() > currNode.point.y()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, true);
-                        this.size++;
                         return;
                     } else {
                         currNode = currNode.right;
                     }
-                } else {
+                } else if (p.y() < currNode.point.y()) {
                     if (currNode.left == null) {
                         currNode.left = createNode(p, true);
-                        this.size++;
                         return;
                     } else {
                         currNode = currNode.left;
@@ -87,7 +84,6 @@ public class KdTree {
 
         if (this.root == null) {
             this.root = createNode(p, false);
-            this.size++;
         }
     }
 
@@ -138,7 +134,7 @@ public class KdTree {
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) {
             throw new IllegalArgumentException();
-        }        
+        }
         LinkedList<Point2D> list = new LinkedList<>();
         recursiveRange(rect, list, root);
         return list;
@@ -201,9 +197,6 @@ public class KdTree {
         if (dist <= radius[0]) { 
             radius[0] = dist;
             point[0] = node.point;
-        }
-        if (node.right != null) {
-            distR = node.right.point.distanceTo(p);
         }
         
 
