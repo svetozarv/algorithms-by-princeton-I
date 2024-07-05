@@ -65,7 +65,7 @@ public class PointSET {
         if (p == null) {
             throw new IllegalArgumentException();
         }
-
+        if (isEmpty()) return null;
         double minDist = Double.POSITIVE_INFINITY;
         Point2D nearestPoint = p;   // return the argument point if bst isEmpty
 
