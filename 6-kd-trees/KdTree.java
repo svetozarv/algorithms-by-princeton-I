@@ -188,7 +188,7 @@ public class KdTree {
 
         Point2D[] point = new Point2D[1];
         double[] radius = new double[1]; 
-        radius[0] = root.point.distanceTo(p);
+        radius[0] = root.point.distanceSquaredTo(p);
 
         nearestRecursive(p, root, radius, point);
         return point[0];
@@ -197,7 +197,7 @@ public class KdTree {
     private void nearestRecursive(Point2D p, Node node, double[] radius, Point2D[] point) {
         
         if (node == null) return;
-        double dist = node.point.distanceTo(p);
+        double dist = node.point.distanceSquaredTo(p);
         if (dist <= radius[0]) { 
             radius[0] = dist;
             point[0] = node.point;
@@ -207,24 +207,24 @@ public class KdTree {
         if (node.dimension == false) {
             if (p.x() < node.point.x()) {
                 nearestRecursive(p, node.left, radius, point);         // check left first
-                if (radius[0] > Math.abs(p.x() - node.point.x())) {
+                if (radius[0] > Math.pow(p.x() - node.point.x(), 2)) {
                     nearestRecursive(p, node.right, radius, point);        // check right
                 }
             } else {
                 nearestRecursive(p, node.right, radius, point);         // check right first
-                if (radius[0] > Math.abs(p.x() - node.point.x())) {
+                if (radius[0] > Math.pow(p.x() - node.point.x(), 2)) {
                     nearestRecursive(p, node.left, radius, point);        // check left
                 }
             }
         } else if (node.dimension == true) {
             if (p.y() < node.point.y()) {
                 nearestRecursive(p, node.left, radius, point);         // check lower first
-                if (radius[0] > Math.abs(p.y() - node.point.y())) {
+                if (radius[0] > Math.pow(p.y() - node.point.y(), 2)) {
                     nearestRecursive(p, node.right, radius, point);        // check upper
                 }
             } else {
                 nearestRecursive(p, node.right, radius, point);        // check upper first
-                if (radius[0] > Math.abs(p.y() - node.point.y())) {
+                if (radius[0] > Math.pow(p.y() - node.point.y(), 2)) {
                     nearestRecursive(p, node.left, radius, point);         // check lower
                 }
             }
