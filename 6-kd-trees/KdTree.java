@@ -30,7 +30,6 @@ public class KdTree {
         return this.size;
     }
 
-
     private Node createNode(Point2D p, boolean dimension) {
         Node newNode = new Node();
         newNode.point = p;
@@ -46,16 +45,17 @@ public class KdTree {
         }
 
         Node currNode = this.root;
-        while (currNode != null) {   
+        while (currNode != null) {
+            if (currNode.point.equals(p)) return;
             if (currNode.dimension == false) {
-                if (p.x() > currNode.point.x()) {
+                if (p.x() >= currNode.point.x()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, false);
                         return;
                     } else {
                         currNode = currNode.right;
                     }
-                } else if (p.x() < currNode.point.x()){
+                } else {
                     if (currNode.left == null){
                         currNode.left = createNode(p, false);
                         return;
@@ -64,14 +64,14 @@ public class KdTree {
                     }
                 }
             } else if (currNode.dimension == true) {
-                if (p.y() > currNode.point.y()) {
+                if (p.y() >= currNode.point.y()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, true);
                         return;
                     } else {
                         currNode = currNode.right;
                     }
-                } else if (p.y() < currNode.point.y()) {
+                } else {
                     if (currNode.left == null) {
                         currNode.left = createNode(p, true);
                         return;
@@ -97,13 +97,13 @@ public class KdTree {
         while (currNode != null) {   
             if (p.compareTo(currNode.point) == 0) return true;
             if (currNode.dimension == false) {
-                if (p.x() > currNode.point.x()) {
+                if (p.x() >= currNode.point.x()) {
                     currNode = currNode.right;
                 } else {
                     currNode = currNode.left;
                 }
             } else if (currNode.dimension == true) {
-                if (p.y() > currNode.point.y()) {
+                if (p.y() >= currNode.point.y()) {
                     currNode = currNode.right;
                 } else {
                     currNode = currNode.left;
@@ -146,28 +146,32 @@ public class KdTree {
             list.add(node.point);
         }
         if (node.dimension == false) {
-
-            // if line intersects the rect, search both
-            if (rect.xmin() < node.point.x() && node.point.x() < rect.xmax()) {
+            double node_point_x = node.point.x();       // caching
+            double rect_xmin = rect.xmin();
+            double rect_xmax = rect.xmax();
+            
+            if (rect_xmin <= node_point_x && node_point_x <= rect_xmax) {       // if line intersects the rect, search both
                 recursiveRange(rect, list, node.left);
                 recursiveRange(rect, list, node.right);
-            } else if (rect.xmax() < node.point.x()) {  // if rect is on the left
-                // go left
-                recursiveRange(rect, list, node.left); 
-            } else if (rect.xmin() > node.point.x()) {
-                // go right
-                recursiveRange(rect, list, node.right);
+            } else if (rect_xmin <= node_point_x && rect_xmax <= node_point_x) {  // if rect is on the left
+                recursiveRange(rect, list, node.left);      // go left
+            } else if (rect_xmin >= node_point_x && rect_xmax >= node_point_x) {
+                recursiveRange(rect, list, node.right);     // go right
             }
             
         } else {
+            double node_point_y = node.point.y();
+            double rect_ymin = rect.ymin();
+            double rect_ymax = rect.ymax();
+
             // if line intersects the rect, search both
-            if (rect.ymin() < node.point.y() && node.point.y() < rect.ymax()) {
+            if (rect_ymin <= node_point_y && node_point_y <= rect_ymax) {
                 recursiveRange(rect, list, node.left);
                 recursiveRange(rect, list, node.right);
-            } else if (rect.ymax() < node.point.y()) {  // if rect is below
+            } else if (rect_ymin <= node_point_y && rect_ymax <= node_point_y) {  // if rect is below
                 // go down
                 recursiveRange(rect, list, node.left); 
-            } else if (rect.ymin() > node.point.y()) {
+            } else if (rect_ymin >= node_point_y && node_point_y <= rect_ymax) {
                 // go up
                 recursiveRange(rect, list, node.right);
             }
@@ -177,9 +181,10 @@ public class KdTree {
     // a nearest neighbor in the set to point p; null if the set is empty\
     // similar to contains, searches for query point
     public Point2D nearest(Point2D p) {
-        if (p == null || this.isEmpty()) {
+        if (p == null) {
             throw new IllegalArgumentException();
         }
+        if (isEmpty()) return null;
 
         Point2D[] point = new Point2D[1];
         double[] radius = new double[1]; 
@@ -188,7 +193,6 @@ public class KdTree {
         nearestRecursive(p, root, radius, point);
         return point[0];
     }
-
 
     private void nearestRecursive(Point2D p, Node node, double[] radius, Point2D[] point) {
         
