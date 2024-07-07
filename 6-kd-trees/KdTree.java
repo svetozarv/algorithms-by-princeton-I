@@ -10,6 +10,7 @@ public class KdTree {
 
     private class Node {
         Point2D point;
+        RectHV rect;
         boolean dimension;  // false for x, true for y
         Node left;
         Node right;
@@ -38,6 +39,18 @@ public class KdTree {
         return newNode; 
     }
 
+    private void writeRectCoordsToArray(double[] array, RectHV rect) {
+        array[0] = rect.xmin();
+        array[1] = rect.ymin();
+        array[2] = rect.xmax();
+        array[3] = rect.ymax();
+    }
+
+    private void writePointCoordsToArray(double[] array, Point2D point) {
+        array[0] = point.x();
+        array[1] = point.y();
+    }
+
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
         if (p == null) {
@@ -45,21 +58,30 @@ public class KdTree {
         }
 
         Node currNode = this.root;
+        double[] parentRectHVcoords = new double[4];
+        double[] parentPointCoords = new double[2];
+        
         while (currNode != null) {
             if (currNode.point.equals(p)) return;
             if (currNode.dimension == false) {
                 if (p.x() >= currNode.point.x()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, false);
+                        currNode.rect = new RectHV(parentPointCoords[0], parentRectHVcoords[1], parentRectHVcoords[2], parentRectHVcoords[3]);
                         return;
                     } else {
+                        writeRectCoordsToArray(parentRectHVcoords, currNode.rect);
+                        writePointCoordsToArray(parentPointCoords, currNode.point);
                         currNode = currNode.right;
                     }
                 } else {
-                    if (currNode.left == null){
+                    if (currNode.left == null) {
                         currNode.left = createNode(p, false);
+                        currNode.rect = new RectHV(parentRectHVcoords[0], parentPointCoords[0], parentRectHVcoords[2], parentRectHVcoords[3]);
                         return;
                     } else {
+                        writeRectCoordsToArray(parentRectHVcoords, currNode.rect);
+                        writePointCoordsToArray(parentPointCoords, currNode.point);
                         currNode = currNode.left;
                     }
                 }
@@ -67,15 +89,21 @@ public class KdTree {
                 if (p.y() >= currNode.point.y()) {
                     if (currNode.right == null) {
                         currNode.right = createNode(p, true);
+                        currNode.rect = new RectHV(parentPointCoords[1], parentRectHVcoords[1], parentRectHVcoords[2], parentRectHVcoords[3]);
                         return;
                     } else {
+                        writeRectCoordsToArray(parentRectHVcoords, currNode.rect);
+                        writePointCoordsToArray(parentPointCoords, currNode.point);
                         currNode = currNode.right;
                     }
                 } else {
                     if (currNode.left == null) {
                         currNode.left = createNode(p, true);
+                        currNode.rect = new RectHV(parentRectHVcoords[1], parentPointCoords[1], parentRectHVcoords[2], parentRectHVcoords[3]);
                         return;
                     } else {
+                        writeRectCoordsToArray(parentRectHVcoords, currNode.rect);
+                        writePointCoordsToArray(parentPointCoords, currNode.point);
                         currNode = currNode.left;
                     }
                 }
@@ -84,6 +112,7 @@ public class KdTree {
 
         if (this.root == null) {
             this.root = createNode(p, false);
+            root.rect = new RectHV(0, 0, 1, 1);
         }
     }
 
