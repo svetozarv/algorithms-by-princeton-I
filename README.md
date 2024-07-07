@@ -13,3 +13,6 @@ There are 6 programming assignments in this course.
 
 # Requirements
 `algs4.jar` (also availible [here](https://github.com/kevin-wayne/algs4/)) is a library, provided by the course. You must download and add `algs4.jar` to the CLASSPATH environment variable, or you can compile and execute your program using the -classpath or -cp option.
+
+# My submissions
+![screenshot 2024-07-07 13 16 00](https://github.com/svetozarv/algorithms-by-princeton-I/assets/106545363/43dc9821-c30b-4294-9b4d-ab3b4198360c)
